@@ -1,10 +1,13 @@
+
+//Following users tab of selected user.
+
 import React from 'react';
-import { View, Text,StyleSheet,ScrollView,Image} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
 const FollowingScreen = ({ following }) => {
     return (
         <ScrollView >
-            {following.map((follower) => (
+            {following?.map((follower) => (
                 <View key={follower.id} style={styles.userItem} >
                     <Image source={{ uri: follower.avatar_url }} style={styles.avatar} />
                     <Text style={styles.userName}>{follower.login}</Text>
@@ -14,7 +17,9 @@ const FollowingScreen = ({ following }) => {
     );
 };
 
-const styles=StyleSheet.create({
+//Styles of Following users tab
+
+const styles = StyleSheet.create({
     avatar: {
         width: 50,
         height: 50,
@@ -25,17 +30,16 @@ const styles=StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    container:{
-        flex:1,
-        flexDirection:'row'
+    container: {
+        flex: 1,
+        flexDirection: 'row'
     },
     userItem: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
-        margin:10
+        margin: 10
     },
 })
-
 
 export default FollowingScreen;

@@ -5,6 +5,8 @@ import { setUsers, setFilteredUsers } from './actions';
 
 import { useNavigation } from '@react-navigation/native';
 
+//Home Screen
+
 const HomeScreen = ({ users, setUsers, filteredUsers, setFilteredUsers }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const navigation = useNavigation();
@@ -13,19 +15,20 @@ const HomeScreen = ({ users, setUsers, filteredUsers, setFilteredUsers }) => {
         fetchUsers();
     }, []);
 
+    //Method of Getting User Data from user Id 1.
+
     const fetchUsers = async () => {
         try {
-            const response = await fetch('https://api.github.com/users?since=1', {
-                headers: {
-                    'Authorization': 'Bearer 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',
-                    'Content-Type': 'application/json'
-                }
+            const response = await fetch('https://api.github.com/users?since=0', {
+                // headers: {
+                //     'Authorization': 'Bearer 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',
+                //     'Content-Type': 'application/json'
+                // }
             });
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const data = await response.json();
             setUsers(data);
         } catch (error) {
@@ -34,14 +37,18 @@ const HomeScreen = ({ users, setUsers, filteredUsers, setFilteredUsers }) => {
         }
     };
 
+    //search method
+
     const handleSearch = (text) => {
         setSearchQuery(text);
         const filteredData = users.filter(user => user.login.toLowerCase().includes(text.toLowerCase()));
         setFilteredUsers(filteredData);
     };
 
+    //user press method
+
     const handleUserPress = (user) => {
-        navigation.navigate('UserInfo', { user });
+        navigation.navigate('User Information', { user });
     };
 
     return (
@@ -66,6 +73,8 @@ const HomeScreen = ({ users, setUsers, filteredUsers, setFilteredUsers }) => {
     );
 };
 
+//HomeScreen styles
+
 const mapStateToProps = (state) => {
     return {
         users: state.users,
@@ -79,6 +88,8 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+
+//styles of Home screen
 
 const styles = StyleSheet.create({
     container: {

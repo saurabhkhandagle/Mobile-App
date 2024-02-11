@@ -1,11 +1,14 @@
+
+//Uers Information page
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 
 const UserInfo = ({ navigation, route }) => {
   const { user } = route.params;
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
-  const [starsCount, setStarsCount] = useState(0);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [stars, setStars] = useState([]);
   const [repos, setRepos] = useState([]);
 
   useEffect(() => {
@@ -13,15 +16,15 @@ const UserInfo = ({ navigation, route }) => {
       try {
         const followersResponse = await fetch(`https://api.github.com/users/${user.login}/followers`);
         const followersData = await followersResponse.json();
-        setFollowersCount(followersData.length);
+        setFollowers(followersData);
 
         const followingResponse = await fetch(`https://api.github.com/users/${user.login}/following`);
         const followingData = await followingResponse.json();
-        setFollowingCount(followingData.length);
+        setFollowing(followingData);
 
         const starredResponse = await fetch(`https://api.github.com/users/${user.login}/starred`);
         const starredData = await starredResponse.json();
-        setStarsCount(starredData.length);
+        setStars(starredData);
 
         const reposResponse = await fetch(`https://api.github.com/users/${user.login}/repos`);
         const reposData = await reposResponse.json();
@@ -35,19 +38,28 @@ const UserInfo = ({ navigation, route }) => {
   }, [user]);
 
   const handleFollowersPress = () => {
-    navigation.navigate('UserAdditionalDetails', { user, tab: 'Followers' });
+    navigation.navigate('User Additional Details', {
+      user, followers, following, stars,
+      tab: 'Followers'
+    });
   };
 
   const handleFollowingPress = () => {
-    navigation.navigate('UserAdditionalDetails', { user, tab: 'Following' });
-  };
+    navigation.navigate('User Additional Details', {
+      user, followers, following, stars
+      , tab: 'Following'
+    });
+  }; 
 
   const handleStarredPress = () => {
-    navigation.navigate('UserAdditionalDetails', { user, tab: 'Stars' });
+    navigation.navigate('User Additional Details', {
+      user, followers, following, stars
+      , tab: 'Stars'
+    });
   };
 
   const handleRepoPress = (repo) => {
-    navigation.navigate('RepoInfo', { repo });
+    navigation.navigate('Repository Information', { repo });
   };
 
   return (
@@ -56,19 +68,19 @@ const UserInfo = ({ navigation, route }) => {
         <Image source={{ uri: user.avatar_url }} style={styles.avatar} />
         <View style={styles.statsContainer}>
           <TouchableOpacity onPress={handleFollowersPress}>
-            <Text style={styles.statsText}>{followersCount}</Text>
+            <Text style={styles.statsText}>{followers?.length}</Text>
             <Text style={styles.statsLabel}>Followers</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.statsContainer}>
           <TouchableOpacity onPress={handleFollowingPress}>
-            <Text style={styles.statsText}>{followingCount}</Text>
+            <Text style={styles.statsText}>{following?.length}</Text>
             <Text style={styles.statsLabel}>Following</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.statsContainer}>
           <TouchableOpacity onPress={handleStarredPress}>
-            <Text style={styles.statsText}>{starsCount}</Text>
+            <Text style={styles.statsText}>{stars?.length}</Text>
             <Text style={styles.statsLabel}>Stars</Text>
           </TouchableOpacity>
         </View>
@@ -91,6 +103,8 @@ const UserInfo = ({ navigation, route }) => {
   );
 };
 
+//style sheet for UserInfo
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -104,7 +118,7 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     marginLeft: 20,
-    
+
   },
   statsText: {
     fontSize: 18,
@@ -141,7 +155,7 @@ const styles = StyleSheet.create({
   repo: {
     fontSize: 16,
     color: 'black',
-    fontWeight:'500'
+    fontWeight: '500'
   },
   title: {
     marginBottom: 15,

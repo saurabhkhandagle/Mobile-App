@@ -3,6 +3,8 @@ const initialState = {
     filteredUsers: [],
 };
 
+//response to actions dispatched to the Redux store.
+
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_USERS':
